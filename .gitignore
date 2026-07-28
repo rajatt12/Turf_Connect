@@ -1,0 +1,46 @@
+# System / IDE
+.idea/
+.vscode/
+.DS_Store
+*.log
+
+# Databases & Local volumes (from docker-compose)
+postgres_data/
+redis_data/
+
+# Python backend dependencies and caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.toast
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+.tox/
+.noscript/
+
+# Backend env secrets
+backend/.env
+backend/.env.local
+
+# Node frontend dependencies and builds
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/*.local
+frontend/.eslintcache
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/pnpm-debug.log*
+frontend/lerna-debug.log*
