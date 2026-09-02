@@ -1,11 +1,12 @@
+from typing import Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "SquadUp"
     DATABASE_URL: str
-    REDIS_URL: str
-    SECRET_KEY: str
-    ENVIRONMENT: str = "development"
+    REDIS_URL: Optional[str] = "redis://localhost:6379/0"
+    SECRET_KEY: str = "squadup_default_jwt_secret_key_32_characters"
+    ENVIRONMENT: str = "production"
     
     # Razorpay configurations
     RAZORPAY_KEY_ID: str = "dummy_key_id"

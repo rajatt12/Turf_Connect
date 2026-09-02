@@ -54,16 +54,22 @@ async def lifespan(app: FastAPI):
             # During migration setup the table might not exist yet, so we ignore failures here
             print(f"Startup seeding skipped or failed: {e}")
             
-    # Start the Redis tasks queue worker
-    from app.core.queue import start_worker, stop_worker
-    start_worker()
-    print("Background task queue worker started.")
+    # Start the Redis tasks queue worker if available
+    try:
+        from app.core.queue import start_worker, stop_worker
+        start_worker()
+        print("Background task queue worker started.")
+    except Exception as e:
+        print(f"Task queue worker initialization skipped: {e}")
             
     yield
     
     # Shutdown queue worker
-    await stop_worker()
-    print("Background task queue worker stopped.")
+    try:
+        await stop_worker()
+        print("Background task queue worker stopped.")
+    except Exception:
+        pass
 
 # ==========================================
 # 2. FastAPI Application Setup
