@@ -1,11 +1,11 @@
 const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 const API_BASE = isLocal 
   ? "http://127.0.0.1:8001" 
-  : (window.SQUADUP_API_BASE || "https://squadup-api.onrender.com");
+  : (window.SQUADUP_API_BASE || "https://squadup-api-6rl8.onrender.com");
 
 const WS_BASE = isLocal
   ? "ws://127.0.0.1:8001"
-  : (window.SQUADUP_WS_BASE || "wss://squadup-api.onrender.com");
+  : (window.SQUADUP_WS_BASE || "wss://squadup-api-6rl8.onrender.com");
 
 const api = {
   // Token Management
