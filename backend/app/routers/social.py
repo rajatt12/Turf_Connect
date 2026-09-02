@@ -1,15 +1,58 @@
 import uuid
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
-from sqlmodel import select
+from sqlmodel import select, SQLModel
 
 from app.core.db import get_db
 from app.core.users import current_active_user
 from app.models import User, UserRead, Follow, Game, GameRead
 
 router = APIRouter(prefix="/users", tags=["social"])
+
+
+class UserProfileUpdate(SQLModel):
+    name: Optional[str] = None
+    city: Optional[str] = None
+    skill_level: Optional[str] = None
+
+
+@router.patch("/me", response_model=UserRead)
+async def update_my_profile(
+    update_data: UserProfileUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(current_active_user),
+):
+    if update_data.name is not None:
+        current_user.name = update_data.name
+    if update_data.city is not None:
+        current_user.city = update_data.city
+    if update_data.skill_level is not None:
+        current_user.skill_level = update_data.skill_level
+
+    db.add(current_user)
+    await db.commit()
+    await db.refresh(current_user)
+    return current_user
+
+
+@router.get("", response_model=List[UserRead])
+async def list_athletes(
+    city: Optional[str] = None,
+    limit: int = 30,
+    offset: int = 0,
+    db: AsyncSession = Depends(get_db)
+):
+    stmt = select(User).offset(offset).limit(limit)
+    if city:
+        if city in ["Bangalore", "Bengaluru"]:
+            stmt = stmt.where(User.city.in_(["Bangalore", "Bengaluru"]))
+        else:
+            stmt = stmt.where(User.city == city)
+    res = await db.execute(stmt)
+    users = res.scalars().all()
+    return users
 
 
 @router.post("/{id}/follow", status_code=status.HTTP_200_OK)

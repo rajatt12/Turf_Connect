@@ -1,10 +1,11 @@
-/**
- * Turf API Client
- * Wraps interactions with the FastAPI backend at http://localhost:8000
- */
+const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const API_BASE = isLocal 
+  ? "http://127.0.0.1:8001" 
+  : (window.SQUADUP_API_BASE || "https://squadup-api.onrender.com");
 
-const API_BASE = "http://localhost:8001";
-const WS_BASE = "ws://localhost:8001";
+const WS_BASE = isLocal
+  ? "ws://127.0.0.1:8001"
+  : (window.SQUADUP_WS_BASE || "wss://squadup-api.onrender.com");
 
 const api = {
   // Token Management
@@ -62,7 +63,12 @@ const api = {
         return null;
       }
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        data = { detail: response.statusText || `Request failed with status ${response.status}` };
+      }
       
       if (!response.ok) {
         // If token expired or invalid, clear token
@@ -71,7 +77,8 @@ const api = {
           this.setUser(null);
           window.dispatchEvent(new Event("auth-changed"));
         }
-        throw new Error(data.detail || "API Request failed");
+        const errorMsg = Array.isArray(data.detail) ? data.detail.map(d => d.msg).join(", ") : (data.detail || "API Request failed");
+        throw new Error(errorMsg);
       }
       
       return data;
@@ -161,15 +168,17 @@ const api = {
     return await this.request(`/games/${gameId}`);
   },
 
-  async createGame(sport, city, maxPlayers, venueId = null, teamId = null) {
+  async createGame(sport, city, maxPlayers, startsAt = null, skillLevel = "All Levels", venueId = null, teamId = null) {
     return await this.request("/games", {
       method: "POST",
       body: JSON.stringify({
         sport,
         city,
         max_players: maxPlayers,
-        venue_id: venueId,
-        team_id: teamId,
+        starts_at: startsAt || null,
+        skill_level: skillLevel || "All Levels",
+        venue_id: venueId || null,
+        team_id: teamId || null,
       }),
     });
   },
@@ -177,6 +186,36 @@ const api = {
   async joinGame(gameId) {
     return await this.request(`/games/${gameId}/join`, {
       method: "POST",
+    });
+  },
+
+  async leaveGame(gameId) {
+    return await this.request(`/games/${gameId}/leave`, {
+      method: "POST",
+    });
+  },
+
+  async cancelGame(gameId) {
+    return await this.request(`/games/${gameId}`, {
+      method: "DELETE",
+    });
+  },
+
+  async completeGame(gameId) {
+    return await this.request(`/games/${gameId}/complete`, {
+      method: "POST",
+    });
+  },
+
+  // Ratings
+  async submitRating(gameId, ratedUserId, score, comment = "") {
+    return await this.request(`/games/${gameId}/ratings`, {
+      method: "POST",
+      body: JSON.stringify({
+        rated_id: ratedUserId,
+        score: parseInt(score, 10),
+        comment: comment || null,
+      }),
     });
   },
 
@@ -198,10 +237,6 @@ const api = {
       method: "POST",
       body: JSON.stringify(venueData),
     });
-  },
-
-  async listGamesAtVenue(venueId) {
-    return await this.request(`/venues/${venueId}/games`);
   },
 
   // Bookings
@@ -227,37 +262,16 @@ const api = {
   },
 
   // Payments
-  async createPayment(bookingId, amount) {
-    return await this.request("/payments/order", {
+  async payBooking(bookingId) {
+    return await this.request(`/bookings/${bookingId}/pay`, {
       method: "POST",
-      body: JSON.stringify({
-        booking_id: bookingId,
-        amount,
-      }),
     });
   },
 
-  async verifyPayment(paymentPayload) {
+  async processWebhook(paymentPayload) {
     return await this.request("/payments/webhook", {
       method: "POST",
       body: JSON.stringify(paymentPayload),
-    });
-  },
-
-  getChatWebSocketUrl(gameId) {
-    const token = this.getToken();
-    return `${WS_BASE}/ws/games/${gameId}/chat?token=${token}`;
-  },
-
-  // Ratings
-  async rateUser(gameId, ratedUserId, score, comment = "") {
-    return await this.request(`/ratings/${gameId}`, {
-      method: "POST",
-      body: JSON.stringify({
-        rated_id: ratedUserId,
-        score,
-        comment,
-      }),
     });
   },
 
@@ -273,7 +287,7 @@ const api = {
   },
 
   async registerDeviceToken(token, platform = "web") {
-    return await this.request("/notifications/devices", {
+    return await this.request("/notifications/tokens", {
       method: "POST",
       body: JSON.stringify({
         token,
@@ -296,7 +310,7 @@ const api = {
       method: "POST",
       body: JSON.stringify({
         name,
-        description,
+        description: description || null,
       }),
     });
   },
@@ -316,21 +330,73 @@ const api = {
 
   // Social
   async followUser(userId) {
-    return await this.request(`/social/follow/${userId}`, {
+    return await this.request(`/users/${userId}/follow`, {
       method: "POST",
     });
   },
 
   async unfollowUser(userId) {
-    return await this.request(`/social/unfollow/${userId}`, {
+    return await this.request(`/users/${userId}/unfollow`, {
       method: "POST",
     });
   },
 
   async getFollowFeed() {
-    return await this.request("/social/feed");
+    return await this.request("/users/me/feed");
+  },
+
+  async getFollowers(userId) {
+    return await this.request(`/users/${userId}/followers`);
+  },
+
+  async getFollowing(userId) {
+    return await this.request(`/users/${userId}/following`);
+  },
+
+  async listUsers(city = null) {
+    const params = city ? `?city=${encodeURIComponent(city)}` : "";
+    return await this.request(`/users${params}`);
+  },
+
+  async completeGame(gameId) {
+    return await this.request(`/games/${gameId}/complete`, {
+      method: "POST",
+    });
+  },
+
+  async ratePlayer(gameId, ratedId, score, comment = "") {
+    return await this.request(`/games/${gameId}/ratings`, {
+      method: "POST",
+      body: JSON.stringify({
+        rated_id: ratedId,
+        score: parseInt(score, 10),
+        comment: comment || null
+      })
+    });
+  },
+
+  async submitRating(gameId, ratedId, score, comment = "") {
+    return await this.ratePlayer(gameId, ratedId, score, comment);
+  },
+
+  async unfollowUser(userId) {
+    return await this.request(`/users/${userId}/unfollow`, {
+      method: "POST",
+    });
+  },
+
+  async updateProfile(data) {
+    return await this.request("/users/me", {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    });
+  },
+
+  getChatWebSocketUrl(gameId) {
+    const token = this.getToken();
+    return `${WS_BASE}/ws/games/${gameId}/chat?token=${token}`;
   }
 };
 
-window.api = api; // Make it available globally
+window.api = api;
 export default api;

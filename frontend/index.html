@@ -2,631 +2,722 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎾</text></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Turf — Play Without Boundaries</title>
+    <title>SquadUp — Sports Matchmaking & Turf Booking</title>
     <link rel="stylesheet" href="/style.css">
   </head>
   <body>
-    <!-- App Root Wrapper -->
-    <div id="app" class="app-container">
-      
-      <!-- Left Navigation Sidebar (Hidden when logged out) -->
-      <aside id="sidebar" class="sidebar" style="display: none;">
-        <div class="brand">
-          <div class="brand-logo">T</div>
-          <span class="brand-name">Turf</span>
-        </div>
+    <div id="app">
+
+      <!-- ========================================== -->
+      <!-- VIEW 0: HERO LANDING & AUTH (SquadUp)      -->
+      <!-- ========================================== -->
+      <div id="view-auth" class="hero-landing-wrapper">
         
-        <nav>
-          <ul class="nav-links">
-            <li>
-              <a class="nav-item active" data-view="dashboard">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-                Dashboard
-              </a>
-            </li>
-            <li>
-              <a class="nav-item" data-view="games">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                Games Loop
-              </a>
-            </li>
-            <li>
-              <a class="nav-item" data-view="venues">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                Venues & Bookings
-              </a>
-            </li>
-            <li>
-              <a class="nav-item" data-view="teams">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87m-4-12a4 4 0 010 7.75"/></svg>
-                Teams
-              </a>
-            </li>
-            <li>
-              <a class="nav-item" data-view="social">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-                Social Network
-              </a>
-            </li>
-            <li>
-              <a class="nav-item" data-view="profile">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-                Settings Profile
-              </a>
-            </li>
-          </ul>
-        </nav>
-        
-        <!-- User Badge Quick View -->
-        <div id="userBadge" class="user-profile-summary" style="display: none;">
-          <div class="avatar" id="avatarLetter">U</div>
-          <div class="user-info">
-            <span class="user-name" id="badgeName">User Profile</span>
-            <span class="user-karma" id="badgeKarma">⚡ 5.0 Karma</span>
-          </div>
-          <a id="logoutBtn" style="margin-left: auto; cursor: pointer; color: var(--danger);" title="Logout">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-          </a>
-        </div>
-      </aside>
-
-      <!-- Main Panel Wrapper -->
-      <main id="mainPanel" class="main-content" style="width: 100%; margin-left: 0;">
-        
-        <!-- ========================================== -->
-        <!-- VIEW 0: AUTHENTICATION (Login / Register) -->
-        <!-- ========================================== -->
-        <div id="view-auth" class="view-container active">
-          <div class="auth-wrapper">
-            <div class="auth-panel glass-panel">
-              <div class="auth-header">
-                <div class="brand-logo auth-logo">T</div>
-                <h2 id="auth-title">Welcome to Turf</h2>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;">Find local sports games and book venues</p>
-              </div>
-
-              <!-- Login Form -->
-              <form id="login-form">
-                <div class="form-group">
-                  <label class="form-label">Email Address</label>
-                  <input type="email" id="login-email" class="form-input" placeholder="dev@example.com" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Password</label>
-                  <input type="password" id="login-password" class="form-input" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Login</button>
-              </form>
-
-              <!-- Register Form (Hidden by default) -->
-              <form id="register-form" style="display: none;">
-                <div class="form-group">
-                  <label class="form-label">Full Name</label>
-                  <input type="text" id="register-name" class="form-input" placeholder="John Doe" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Email Address</label>
-                  <input type="email" id="register-email" class="form-input" placeholder="john@example.com" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Password</label>
-                  <input type="password" id="register-password" class="form-input" placeholder="Min. 8 characters" required>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">Skill Level</label>
-                  <select id="register-skill" class="form-input form-select" required>
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">City</label>
-                  <input type="text" id="register-city" class="form-input" placeholder="Mumbai" required>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Create Account</button>
-              </form>
-
-              <div class="auth-switch">
-                <p id="switch-prompt">Don't have an account? <span id="switch-to-register">Sign Up</span></p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- VIEW 1: DASHBOARD OVERVIEW -->
-        <!-- ========================================== -->
-        <div id="view-dashboard" class="view-container">
-          <div class="section-header">
-            <div>
-              <h1 class="section-title">Turf Dashboard</h1>
-              <p style="color: var(--text-muted); font-size: 0.9rem;">Quick updates and metrics for <span id="dash-username" style="color: var(--primary);">Player</span></p>
-            </div>
-            <div id="karma-glow-badge" class="glass-panel" style="padding: 10px 18px; border-radius: 30px; display: inline-flex; align-items: center; gap: 8px;">
-              <span style="color: var(--warning); font-weight: 700;">⚡ Karma Rating:</span>
-              <span id="dash-karma-val" style="font-weight: 600;">5.0</span>
-            </div>
+        <!-- Floating Frosted Header -->
+        <header class="hero-header">
+          <div class="hero-brand">
+            <div class="hero-brand-ball"></div>
+            <span>SquadUp</span>
           </div>
 
-          <div class="dashboard-grid">
-            <div class="glass-panel stat-card">
-              <div class="stat-icon">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-              </div>
-              <div>
-                <div class="stat-value" id="stat-active-games">0</div>
-                <div class="stat-label">Active Games Nearby</div>
-              </div>
-            </div>
+          <button class="hero-auth-btn" id="hero-login-trigger-btn" onclick="toggleAuthModal(true)">
+            <span>Sign In / Book Now &rarr;</span>
+          </button>
+        </header>
 
-            <div class="glass-panel stat-card">
-              <div class="stat-icon">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5"/></svg>
-              </div>
-              <div>
-                <div class="stat-value" id="stat-bookings">0</div>
-                <div class="stat-label">My Bookings</div>
-              </div>
-            </div>
+        <!-- Giant Editorial Hero Content -->
+        <div class="hero-body-content">
+          <h1 class="hero-massive-title">
+            PLAY<br>
+            BETTER<br>
+            MATCH<br>
+            SMARTER
+          </h1>
+          <p class="hero-subtitle">
+            The all-in-one sports matchmaking and turf booking platform. Squad up for local pickup matches in Box Cricket, Turf Football, Badminton, and Tennis with fair-play karma scoring.
+          </p>
 
-            <div class="glass-panel stat-card">
-              <div class="stat-icon">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-              </div>
-              <div>
-                <div class="stat-value" id="stat-followers">0</div>
-                <div class="stat-label">Followers</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="two-col-grid">
-            <!-- Notifications panel (Module 9) -->
-            <div class="glass-panel">
-              <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
-                Notifications Alert Feed
-              </h2>
-              <div class="list-container" id="dash-notifications-list">
-                <div style="color: var(--text-muted); text-align: center; padding: 20px;">No new alerts.</div>
-              </div>
-            </div>
-
-            <!-- Profile Overview Quick actions -->
-            <div class="glass-panel">
-              <h2 style="margin-bottom: 20px;">Your Profile Details</h2>
-              <div style="display: flex; flex-direction: column; gap: 12px;">
-                <div>
-                  <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">City</span>
-                  <span id="dash-profile-city" style="font-weight: 600;">Mumbai</span>
-                </div>
-                <div>
-                  <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Skill Level</span>
-                  <span id="dash-profile-skill" style="font-weight: 600;">Intermediate</span>
-                </div>
-                <div>
-                  <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Registered Email</span>
-                  <span id="dash-profile-email" style="font-weight: 600;">dev@example.com</span>
-                </div>
-                <div>
-                  <span style="color: var(--text-muted); font-size: 0.85rem; display: block;">Platform Permission Role</span>
-                  <span id="dash-profile-role" class="badge badge-open" style="font-size: 0.8rem; margin-top: 4px;">player</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- VIEW 2: GAMES CORE LOOP -->
-        <!-- ========================================== -->
-        <div id="view-games" class="view-container">
-          <div class="section-header">
-            <div>
-              <h1 class="section-title">Games Lobby</h1>
-              <p style="color: var(--text-muted); font-size: 0.9rem;">Join existing matchups or host your own game</p>
-            </div>
-            <button id="openHostModalBtn" class="btn btn-primary">
-              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-              Host Match
+          <div class="hero-cta-group">
+            <button type="button" class="btn-coral-journey" onclick="toggleAuthModal(true)">
+              Start your own journey
+            </button>
+            <button type="button" class="btn-lime-dev" id="quick-dev-login-btn">
+              ⚡ 1-Click Dev Demo Login
             </button>
           </div>
-
-          <!-- Filters Row -->
-          <div class="glass-panel" style="margin-bottom: 30px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto; gap: 15px; align-items: end;">
-            <div class="form-group" style="margin-bottom: 0;">
-              <label class="form-label">Sport</label>
-              <select id="filter-game-sport" class="form-input form-select">
-                <option value="">All Sports</option>
-                <option value="Cricket">Cricket</option>
-                <option value="Football">Football</option>
-                <option value="Basketball">Basketball</option>
-                <option value="Tennis">Tennis</option>
-                <option value="Badminton">Badminton</option>
-              </select>
-            </div>
-            <div class="form-group" style="margin-bottom: 0;">
-              <label class="form-label">City</label>
-              <input type="text" id="filter-game-city" class="form-input" placeholder="e.g. Mumbai">
-            </div>
-            <div class="form-group" style="margin-bottom: 0;">
-              <label class="form-label">Status</label>
-              <select id="filter-game-status" class="form-input form-select">
-                <option value="">All Statuses</option>
-                <option value="open">Open Slots</option>
-                <option value="full">Full Games</option>
-              </select>
-            </div>
-            <div class="form-group" style="margin-bottom: 0;">
-              <label class="form-label">Geolocation radius</label>
-              <select id="filter-game-radius" class="form-input form-select">
-                <option value="">No Distance Range</option>
-                <option value="5">Within 5 km</option>
-                <option value="15">Within 15 km</option>
-                <option value="30">Within 30 km</option>
-              </select>
-            </div>
-            <button id="btnFilterGames" class="btn btn-secondary" style="height: 46px;">Apply Filters</button>
-          </div>
-
-          <!-- Main Layout Split: Active games + Visual Geolocation Map Map -->
-          <div class="two-col-grid">
-            <div class="list-container" id="games-list">
-              <!-- Dynamically populated -->
-              <div style="text-align: center; color: var(--text-muted); padding: 35px;" class="glass-panel">
-                Loading game lobbies...
-              </div>
-            </div>
-
-            <!-- Geolocation panel showing coordinates & mock visual radar -->
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-              <div class="glass-panel">
-                <h3 style="margin-bottom: 15px;">Nearby Radar View</h3>
-                <div class="map-placeholder">
-                  <div class="map-grid-lines"></div>
-                  <div class="map-marker"></div>
-                  <span style="font-weight: 500; font-size: 0.95rem; z-index: 2;">Live Geolocation Radar</span>
-                  <span id="radar-coordinates" style="font-size: 0.75rem; color: var(--accent); z-index: 2;">Lat: --, Lng: --</span>
-                </div>
-                <div style="margin-top: 15px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4;">
-                  Allows matching games within a specific distance using spatial indexing calculations from <strong>PostGIS</strong> inside PostgreSQL database.
-                </div>
-              </div>
-
-              <!-- Active Chat room container when joined -->
-              <div class="glass-panel" id="active-game-chat-wrapper" style="display: none;">
-                <h3 style="margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;">
-                  <span style="display: flex; align-items: center; gap: 8px;">
-                    <span style="color: var(--primary);">●</span> Chat Room
-                  </span>
-                  <span id="chat-game-sport" style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted);">Cricket</span>
-                </h3>
-                
-                <div class="chat-container">
-                  <div class="chat-messages" id="chat-messages-box">
-                    <!-- Loaded dynamically -->
-                  </div>
-                  <form id="chat-send-form" class="chat-input-row">
-                    <input type="text" id="chat-input-body" class="form-input" placeholder="Type a message..." required autocomplete="off">
-                    <button type="submit" class="btn btn-primary" style="padding: 12px 18px;">Send</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- VIEW 3: VENUES & BOOKINGS -->
-        <!-- ========================================== -->
-        <div id="view-venues" class="view-container">
-          <div class="section-header">
-            <div>
-              <h1 class="section-title">Venues Inventory</h1>
-              <p style="color: var(--text-muted); font-size: 0.9rem;">Explore locations, schedule match slots, and book courts</p>
+        <!-- Floating Proof Widget (Bottom Right) -->
+        <div class="hero-proof-card">
+          <div>
+            <div class="proof-number">50K<span>+</span></div>
+            <div class="proof-label">Active Athletes</div>
+            <div class="proof-avatars-row">
+              <div class="proof-avatar-dot">R</div>
+              <div class="proof-avatar-dot">S</div>
+              <div class="proof-avatar-dot">D</div>
             </div>
           </div>
-
-          <div class="two-col-grid">
-            <!-- Venues Inventory list -->
-            <div class="list-container" id="venues-list">
-              <!-- Dynamically populated -->
-              <div style="text-align: center; color: var(--text-muted); padding: 30px;" class="glass-panel">
-                Loading physical venues...
-              </div>
-            </div>
-
-            <!-- Booking panel -->
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-              <div class="glass-panel">
-                <h3 id="booking-panel-title" style="margin-bottom: 20px; color: var(--primary);">Secure a Time Slot</h3>
-                <p id="booking-venue-select-prompt" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Select a venue from the list to book a slot.</p>
-                
-                <form id="booking-form" style="display: none;">
-                  <input type="hidden" id="booking-venue-id">
-                  
-                  <div class="form-group">
-                    <label class="form-label">Venue Name</label>
-                    <input type="text" id="booking-venue-name" class="form-input" readonly style="background: hsla(222, 47%, 5%, 0.5); border-color: var(--glass-border);">
-                  </div>
-                  
-                  <div class="form-group">
-                    <label class="form-label">Booking Start Date & Time</label>
-                    <input type="datetime-local" id="booking-start" class="form-input" required>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label class="form-label">Booking End Date & Time</label>
-                    <input type="datetime-local" id="booking-end" class="form-input" required>
-                  </div>
-
-                  <div style="background: hsla(190, 90%, 50%, 0.05); border: 1px solid hsla(190, 90%, 50%, 0.15); padding: 12px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 20px; line-height: 1.4;">
-                    <strong>Concurrency Notice:</strong> Double bookings are strictly prevented using row-level transactional locking (<code>SELECT ... FOR UPDATE</code>) on scheduling overlapping time slots.
-                  </div>
-
-                  <button type="submit" class="btn btn-primary" style="width: 100%;">Book Venue (Razorpay Checkout)</button>
-                </form>
-              </div>
-
-              <!-- List of user bookings (Module 4) -->
-              <div class="glass-panel">
-                <h3 style="margin-bottom: 15px;">Your Booking Schedule</h3>
-                <div style="overflow-x: auto;">
-                  <table class="scheduler-table">
-                    <thead>
-                      <tr>
-                        <th>Venue</th>
-                        <th>Starts At</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody id="user-bookings-table-body">
-                      <tr>
-                        <td colspan="4" style="color: var(--text-muted); text-align: center; padding: 15px;">No bookings recorded.</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div class="proof-thumb-preview">🏆</div>
         </div>
 
-        <!-- ========================================== -->
-        <!-- VIEW 4: TEAMS -->
-        <!-- ========================================== -->
-        <div id="view-teams" class="view-container">
-          <div class="section-header">
-            <div>
-              <h1 class="section-title">Turf Teams</h1>
-              <p style="color: var(--text-muted); font-size: 0.9rem;">Join professional team clusters or create your own club</p>
+        <!-- Auth Popup Form Card (Opened on CTA) -->
+        <div id="auth-modal-card" class="auth-popup-card">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div class="hero-brand" style="font-size: 20px;">
+              <div class="hero-brand-ball"></div>
+              <span>Turf Sign In</span>
             </div>
-            <button id="openTeamModalBtn" class="btn btn-primary">
-              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-              Create Team
+            <button type="button" class="topbar-round-btn" onclick="toggleAuthModal(false)">&times;</button>
+          </div>
+
+          <!-- Quick Dev Demo Login -->
+          <button type="button" class="btn-lime-dev" id="popup-dev-login-btn" style="width: 100%; margin-bottom: 16px;">
+            ⚡ 1-Click Dev Demo Login
+          </button>
+
+          <!-- Login Form -->
+          <form id="login-form">
+            <div style="margin-bottom: 14px;">
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Email Address</label>
+              <input type="email" id="login-email" class="filter-pill-canvas" style="width: 100%; margin-top: 6px; border-radius: var(--radius-md); background: #0B100B; color: #FFF; border-color: rgba(255,255,255,0.15);" value="dev@example.com" required>
+            </div>
+            <div style="margin-bottom: 20px;">
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Password</label>
+              <input type="password" id="login-password" class="filter-pill-canvas" style="width: 100%; margin-top: 6px; border-radius: var(--radius-md); background: #0B100B; color: #FFF; border-color: rgba(255,255,255,0.15);" value="devpassword123" required>
+            </div>
+            <button type="submit" class="btn-coral-journey" style="width: 100%;">Log In to Dashboard</button>
+          </form>
+
+          <!-- Register Form (Hidden by default) -->
+          <form id="register-form" style="display: none;">
+            <div style="margin-bottom: 12px;">
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Full Name</label>
+              <input type="text" id="register-name" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" placeholder="Rajat Sharma" required>
+            </div>
+            <div style="margin-bottom: 12px;">
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Email</label>
+              <input type="email" id="register-email" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" placeholder="rajat@example.com" required>
+            </div>
+            <div style="margin-bottom: 12px;">
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Password</label>
+              <input type="password" id="register-password" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" placeholder="Min. 8 characters" required>
+            </div>
+            <div style="margin-bottom: 12px;">
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Skill Level</label>
+              <select id="register-skill" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;">
+                <option value="Beginner">Beginner (Casual games)</option>
+                <option value="Intermediate" selected>Intermediate (Regular player)</option>
+                <option value="Advanced">Advanced (Competitive club level)</option>
+              </select>
+            </div>
+            <div style="margin-bottom: 16px;">
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">City</label>
+              <input type="text" id="register-city" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" value="Mumbai" required>
+            </div>
+            <button type="submit" class="btn-coral-journey" style="width: 100%;">Create Account</button>
+          </form>
+
+          <div style="text-align: center; margin-top: 18px; font-size: 13px; color: #94A3B8;">
+            <span id="auth-switch-text">Don't have an account?</span>
+            <span id="auth-switch-btn" style="color: var(--primary-lime); font-weight: 700; cursor: pointer; margin-left: 6px;">Sign Up</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- VIEW 1: BENTO DASHBOARD ("YOUR MATCH")     -->
+      <!-- ========================================== -->
+      <div id="main-app" class="match-app-layout" style="display: none;">
+        
+        <!-- Left Sleek Dark Sidebar -->
+        <aside class="match-sidebar">
+          <div>
+            <div class="match-brand-logo">
+              <div class="tennis-ball-icon"></div>
+              <span>SquadUp</span>
+            </div>
+
+            <ul class="match-nav-list">
+              <li>
+                <a class="match-nav-item active" data-view="dashboard">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                  <span>Dashboard</span>
+                </a>
+              </li>
+              <li>
+                <a class="match-nav-item" data-view="games">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                  <span>Live Games</span>
+                </a>
+              </li>
+              <li>
+                <a class="match-nav-item" data-view="venues">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <span>Turf Venues</span>
+                </a>
+              </li>
+              <li>
+                <a class="match-nav-item" data-view="teams">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+                  <span>Teams & Clubs</span>
+                </a>
+              </li>
+              <li>
+                <a class="match-nav-item" data-view="social">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  <span>Athletes Feed</span>
+                </a>
+              </li>
+              <li>
+                <a class="match-nav-item" data-view="profile">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1 2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                  <span>My Profile</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Bottom Pro Card & Sign Out -->
+          <div>
+            <div class="sidebar-pro-card">
+              <div class="tennis-ball-icon" style="margin: 0 auto 8px auto;"></div>
+              <div class="sidebar-pro-title">Host a Match</div>
+              <div class="sidebar-pro-desc">Launch an open lobby for local pickup players.</div>
+              <button class="btn-lime-dev" style="font-size: 11px; padding: 6px 14px;" onclick="openHostGameModal()">+ Host Game</button>
+            </div>
+
+            <button id="logout-btn" style="width: 100%; background: transparent; border: none; color: rgba(255,255,255,0.4); font-weight: 700; font-size: 12px; margin-top: 16px; cursor: pointer; text-transform: uppercase;">
+              Sign Out
             </button>
           </div>
+        </aside>
 
-          <div class="two-col-grid">
-            <!-- Teams directory -->
-            <div class="list-container" id="teams-list">
-              <!-- Dynamically populated -->
-              <div style="text-align: center; color: var(--text-muted); padding: 30px;" class="glass-panel">
-                Loading team directory...
-              </div>
-            </div>
+        <!-- Main Matcha Bento Canvas -->
+        <main class="match-main-canvas">
 
-            <!-- Selected Team Detail view -->
-            <div class="glass-panel" id="team-detail-panel" style="display: none;">
-              <h2 id="team-detail-name" style="margin-bottom: 6px; color: var(--accent);">Team Detail</h2>
-              <p id="team-detail-desc" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4;">No description.</p>
-              
-              <h3 style="font-size: 1.1rem; margin-bottom: 12px; border-bottom: 1px solid var(--glass-border); padding-bottom: 8px;">Members list</h3>
-              <ul id="team-members-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px;">
-                <!-- Filled dynamically -->
-              </ul>
-
-              <!-- Allow hosting games for teams -->
-              <div id="team-action-host-game" style="display: none; padding-top: 15px; border-top: 1px solid var(--glass-border);">
-                <button id="teamHostGameBtn" class="btn btn-secondary" style="width: 100%;">Host Match for this Team</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- VIEW 5: SOCIAL GRAPH -->
-        <!-- ========================================== -->
-        <div id="view-social" class="view-container">
-          <div class="section-header">
+          <!-- Topbar with Welcome & Metrics -->
+          <div class="match-topbar">
             <div>
-              <h1 class="section-title">Social Network</h1>
-              <p style="color: var(--text-muted); font-size: 0.9rem;">Follow matching users and view their shared game lobbies</p>
-            </div>
-          </div>
-
-          <div class="two-col-grid">
-            <!-- Social Activities list -->
-            <div class="glass-panel">
-              <h2 style="margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
-                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 4h-2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5"/></svg>
-                Follower Feed Activities
-              </h2>
-              <div class="list-container" id="social-feed-list">
-                <div style="color: var(--text-muted); text-align: center; padding: 25px;">Follow other users to see games they host or join.</div>
-              </div>
+              <h1 class="match-greeting-title" id="dash-greeting">Welcome Athlete!</h1>
+              <div class="match-date-sub" id="dash-today-date">TODAY IS SATURDAY, 11TH NOVEMBER 2026</div>
             </div>
 
-            <!-- Follow users directory -->
-            <div class="glass-panel">
-              <h2 style="margin-bottom: 15px;">Discover Players</h2>
-              <div class="form-group">
-                <input type="text" id="social-search-input" class="form-input" placeholder="Type to filter players...">
-              </div>
-              <div class="list-container" id="social-players-list" style="margin-top: 15px; max-height: 400px; overflow-y: auto;">
-                <!-- Populated dynamically -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- VIEW 6: SETTINGS PROFILE -->
-        <!-- ========================================== -->
-        <div id="view-profile" class="view-container">
-          <div class="section-header">
-            <div>
-              <h1 class="section-title">Profile Settings</h1>
-              <p style="color: var(--text-muted); font-size: 0.9rem;">Update your personal sports profile settings</p>
-            </div>
-          </div>
-
-          <div class="glass-panel" style="max-width: 600px;">
-            <form id="profile-update-form">
-              <div class="form-group">
-                <label class="form-label">Full Name</label>
-                <input type="text" id="profile-name" class="form-input" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label">City</label>
-                <input type="text" id="profile-city" class="form-input" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Skill Level</label>
-                <select id="profile-skill" class="form-input form-select" required>
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
+            <div class="match-topbar-pills">
+              <!-- City Selector Dropdown -->
+              <div style="background: #FFF; border-radius: var(--radius-full); padding: 4px 14px; display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 12px; color: var(--text-dark-muted); font-weight: 700;">📍 CITY:</span>
+                <select id="global-city-selector" style="border: none; background: transparent; font-weight: 800; font-size: 12px; color: var(--text-dark); outline: none; cursor: pointer;">
+                  <option value="Mumbai">Mumbai</option>
+                  <option value="Bangalore">Bangalore</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Pune">Pune</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                  <option value="Chennai">Chennai</option>
                 </select>
               </div>
-              
-              <div style="background: hsla(142, 76%, 45%, 0.05); border: 1px solid hsla(142, 76%, 45%, 0.15); padding: 15px; border-radius: 8px; margin-bottom: 25px;">
-                <span style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 5px;">Karma Metric Score</span>
-                <span style="font-size: 1.4rem; font-weight: 700; color: var(--warning);">⚡ <span id="profile-karma-val">5.0</span></span>
-                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Karma is averaged dynamically from reviews submitted by other users you play matches with.</p>
+
+              <div class="stat-pill">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                <span id="pill-followers">0 FOLLOWERS</span>
+              </div>
+              <div class="stat-pill">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                <span id="pill-matches">0 MATCHES</span>
               </div>
 
-              <button type="submit" class="btn btn-primary">Save Changes</button>
-            </form>
-          </div>
-        </div>
-
-      </main>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- DIALOG MODAL 1: HOST A GAME -->
-    <!-- ========================================== -->
-    <div id="modal-host-game" class="modal-overlay">
-      <div class="modal-content glass-panel">
-        <div class="modal-header">
-          <h2 style="color: var(--primary);">Host a Game</h2>
-          <button class="modal-close" onclick="toggleModal('modal-host-game', false)">&times;</button>
-        </div>
-        <form id="host-game-form">
-          <div class="form-group">
-            <label class="form-label">Sport</label>
-            <select id="host-sport" class="form-input form-select" required>
-              <option value="Cricket">Cricket</option>
-              <option value="Football">Football</option>
-              <option value="Basketball">Basketball</option>
-              <option value="Tennis">Tennis</option>
-              <option value="Badminton">Badminton</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">City</label>
-            <input type="text" id="host-city" class="form-input" placeholder="Mumbai" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Max Players Capacity</label>
-            <input type="number" id="host-max-players" class="form-input" min="2" max="50" value="10" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Assign Venue (Optional)</label>
-            <select id="host-venue" class="form-input form-select">
-              <option value="">No Venue / TBD</option>
-              <!-- Populated dynamically -->
-            </select>
-          </div>
-          <div class="form-group" style="display: none;" id="host-team-group">
-            <label class="form-label">Host on behalf of Team</label>
-            <select id="host-team" class="form-input form-select">
-              <option value="">No Team (Individual Host)</option>
-              <!-- Populated dynamically -->
-            </select>
-          </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Create Match Lobby</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- DIALOG MODAL 2: RATE PLAYER -->
-    <!-- ========================================== -->
-    <div id="modal-rate-player" class="modal-overlay">
-      <div class="modal-content glass-panel">
-        <div class="modal-header">
-          <h2 style="color: var(--warning);">Rate Player Karma</h2>
-          <button class="modal-close" onclick="toggleModal('modal-rate-player', false)">&times;</button>
-        </div>
-        <form id="rate-player-form">
-          <input type="hidden" id="rate-game-id">
-          <input type="hidden" id="rate-user-id">
-          
-          <div class="form-group" style="text-align: center; margin-bottom: 25px;">
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 10px;">Rate <strong id="rate-target-name" style="color: var(--text-main);">Player</strong> for your match:</p>
-            <div style="display: inline-flex; gap: 8px; justify-content: center;">
-              <button type="button" class="rating-star-btn" data-val="1">★</button>
-              <button type="button" class="rating-star-btn" data-val="2">★</button>
-              <button type="button" class="rating-star-btn" data-val="3">★</button>
-              <button type="button" class="rating-star-btn" data-val="4">★</button>
-              <button type="button" class="rating-star-btn" data-val="5">★</button>
+              <!-- Action Icons -->
+              <button class="topbar-round-btn" title="Search"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+              <button class="topbar-round-btn" title="Notifications"><svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
             </div>
-            <input type="hidden" id="rate-score-input" required value="">
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Comment (Optional)</label>
-            <input type="text" id="rate-comment" class="form-input" placeholder="e.g. Fair play, great team player!">
-          </div>
+          <!-- Dynamic Views Container -->
+          <div>
 
-          <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Rating</button>
+            <!-- ========================================== -->
+            <!-- VIEW: DASHBOARD BENTO GRID                 -->
+            <!-- ========================================== -->
+            <div id="view-dashboard" class="hub-content-section active">
+              <div class="bento-grid">
+                
+                <!-- 1. Left Vertical Athlete Showcase Card -->
+                <div class="bento-athlete-card">
+                  <div class="athlete-glass-overlay">
+                    <div class="athlete-badge-header">
+                      <div class="athlete-thumb" id="dash-avatar-letter">A</div>
+                      <div>
+                        <div class="athlete-name" id="dash-athlete-name">Athlete</div>
+                        <div class="athlete-country" id="dash-athlete-city">🌐 MUMBAI, INDIA</div>
+                      </div>
+                    </div>
+
+                    <div class="athlete-meta-grid">
+                      <div>Skill: <span id="dash-athlete-skill">Intermediate</span></div>
+                      <div>Role: <span id="dash-athlete-role">Pro Player</span></div>
+                      <div>Karma: <span id="dash-athlete-karma" style="color: #D97706;">⚡ 5.0 / 5.0</span></div>
+                      <div>Circuit: <span>Turf Champions</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 2. Top Center/Right: My Next Match VS Card -->
+                <div class="bento-next-match">
+                  <div class="match-header-row">
+                    <h3>My Next Match</h3>
+                    <div class="match-date-badge">
+                      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                      <span id="next-match-date">READY TO COMPETE</span>
+                    </div>
+                  </div>
+
+                  <div class="match-versus-row">
+                    <div class="vs-fighter-card player1">
+                      <div style="font-weight: 800; font-size: 16px;" id="vs-fighter-1">Open Match Lobbies</div>
+                      <div style="font-size: 11px; color: var(--primary-lime); font-weight: 700;">FIND PICKUP PLAYERS</div>
+                    </div>
+
+                    <div class="vs-badge-circle">VS</div>
+
+                    <div class="vs-fighter-card player2">
+                      <div style="font-weight: 800; font-size: 16px;" id="vs-fighter-2">Ready to Play</div>
+                      <div style="font-size: 11px; color: #F59E0B; font-weight: 700;">HOST A MATCH</div>
+                    </div>
+                  </div>
+
+                  <div style="display: flex; gap: 10px; margin-top: 16px;">
+                    <button class="btn-lime-dev" style="flex: 1; font-size: 12px;" onclick="switchView('games')">View Match Lobbies</button>
+                    <button class="btn-coral-journey" style="padding: 8px 18px; font-size: 12px;" onclick="openHostGameModal()">+ Host Match</button>
+                  </div>
+                </div>
+
+                <!-- 3. Middle Left: Latest Scores Card -->
+                <div class="bento-scores-card">
+                  <div style="display: flex; align-items: center; justify-content: space-between;">
+                    <h3 style="font-size: 18px; font-weight: 800;">Latest Scores</h3>
+                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-dark-muted); cursor: pointer;" onclick="switchView('games')">VIEW ALL &rarr;</span>
+                  </div>
+
+                  <div class="score-tabs">
+                    <button class="score-tab-pill active">Cricket</button>
+                    <button class="score-tab-pill">Football</button>
+                    <button class="score-tab-pill">Badminton</button>
+                  </div>
+
+                  <div class="live-score-box" id="live-score-box-container">
+                    <div>
+                      <div style="font-weight: 800; font-size: 13px;" id="live-score-title">⚡ PICKUP MATCHES</div>
+                      <div style="font-size: 11px; color: var(--text-dark-muted);" id="live-score-sub">Play your first match to record scores!</div>
+                    </div>
+                    <span style="background: #141C12; color: var(--primary-lime); padding: 4px 10px; border-radius: var(--radius-full); font-size: 11px; font-weight: 800;" id="live-score-tag">NEW ROSTER</span>
+                  </div>
+                </div>
+
+                <!-- 4. Middle Right: Statistic Card -->
+                <div class="bento-stat-card">
+                  <div class="stat-subtext">Career Performance</div>
+                  <div class="stat-big-number" id="stat-big-wins">0 Matches</div>
+                  <div style="font-size: 13px; font-weight: 700; color: var(--primary-lime);" id="stat-ratio-text">[ Ready to Compete ]</div>
+                </div>
+
+                <!-- 5. Bottom Row Breakdown Pills -->
+                <div class="bento-bottom-row">
+                  <div class="win-pill-card">
+                    <div>
+                      <div class="win-pill-title">Box Cricket Matches</div>
+                      <div class="win-pill-count" id="wins-singles">0 Matches</div>
+                    </div>
+                    <div class="tennis-ball-icon"></div>
+                  </div>
+
+                  <div class="win-pill-card">
+                    <div>
+                      <div class="win-pill-title">Turf Football 5v5</div>
+                      <div class="win-pill-count" id="wins-doubles">0 Matches</div>
+                    </div>
+                    <div class="tennis-ball-icon"></div>
+                  </div>
+
+                  <div class="win-pill-card">
+                    <div>
+                      <div class="win-pill-title">Badminton & Tennis</div>
+                      <div class="win-pill-count" id="wins-mixed">0 Matches</div>
+                    </div>
+                    <div class="tennis-ball-icon"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW: LIVE GAMES LOOP                      -->
+            <!-- ========================================== -->
+            <div id="view-games" class="hub-content-section">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                <div>
+                  <h2 style="font-size: 26px; font-weight: 900;">Live Matches Loop</h2>
+                  <p style="color: var(--text-dark-muted); font-size: 13px;">Find active game lobbies or host your own pickup match.</p>
+                </div>
+                <button class="btn-coral-journey" onclick="openHostGameModal()">+ Host a Match Lobby</button>
+              </div>
+
+              <!-- Filter Pills -->
+              <div style="display: flex; gap: 8px; margin-bottom: 24px; overflow-x: auto;" id="games-sport-filters">
+                <button class="filter-pill-canvas active" data-sport="">All Sports</button>
+                <button class="filter-pill-canvas" data-sport="Football">⚽ Football</button>
+                <button class="filter-pill-canvas" data-sport="Cricket">🏏 Cricket</button>
+                <button class="filter-pill-canvas" data-sport="Badminton">🏸 Badminton</button>
+                <button class="filter-pill-canvas" data-sport="Basketball">🏀 Basketball</button>
+                <button class="filter-pill-canvas" data-sport="Tennis">🎾 Tennis</button>
+              </div>
+
+              <div id="games-grid-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW: TURF VENUES & BOOKINGS               -->
+            <!-- ========================================== -->
+            <div id="view-venues" class="hub-content-section">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                <div>
+                  <h2 style="font-size: 26px; font-weight: 900;">Turf Arenas & Booking</h2>
+                  <p style="color: var(--text-dark-muted); font-size: 13px;">Discover licensed courts and book slots with double-booking lock protection.</p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                  <button class="btn-lime-dev" onclick="openHostGameModal()">+ Host a Match</button>
+                  <button class="btn-coral-journey" id="btn-register-venue" style="display: none;" onclick="openCreateVenueModal()">+ Register Arena</button>
+                </div>
+              </div>
+
+              <div id="venues-grid-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;"></div>
+
+              <div class="hub-card" style="margin-top: 32px;">
+                <h3 style="font-size: 18px; margin-bottom: 16px;">My Active Court Reservations</h3>
+                <div id="my-bookings-container"></div>
+              </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW: TEAMS & CLUBS                        -->
+            <!-- ========================================== -->
+            <div id="view-teams" class="hub-content-section">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                <div>
+                  <h2 style="font-size: 26px; font-weight: 900;">Teams & Sports Clubs</h2>
+                  <p style="color: var(--text-dark-muted); font-size: 13px;">Manage clubs, roster captains, and squad pickups.</p>
+                </div>
+                <button class="btn-coral-journey" onclick="openCreateTeamModal()">+ Create Team Club</button>
+              </div>
+
+              <div id="teams-grid-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;"></div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW: ATHLETES SOCIAL FEED                 -->
+            <!-- ========================================== -->
+            <div id="view-social" class="hub-content-section">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                <div>
+                  <h2 style="font-size: 26px; font-weight: 900;">Athletes Social Network</h2>
+                  <p style="color: var(--text-dark-muted); font-size: 13px;">Connect with players, discover teammates, and track game invites.</p>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="hub-card">
+                  <h3 style="font-size: 18px; margin-bottom: 16px;">Discover Athletes</h3>
+                  <div id="athletes-directory-container"></div>
+                </div>
+                <div class="hub-card">
+                  <h3 style="font-size: 18px; margin-bottom: 16px;">Network Activity</h3>
+                  <div id="social-activity-feed"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- VIEW: MY PROFILE & SETTINGS                -->
+            <!-- ========================================== -->
+            <div id="view-profile" class="hub-content-section">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                <div>
+                  <h2 style="font-size: 26px; font-weight: 900;">Athlete Profile & Karma</h2>
+                  <p style="color: var(--text-dark-muted); font-size: 13px;">Update your sport skills, location, and fair-play rating.</p>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="hub-card">
+                  <h3 style="font-size: 18px; margin-bottom: 16px;">Edit Profile</h3>
+                  <form id="profile-edit-form">
+                    <div style="margin-bottom: 14px;">
+                      <label style="font-size: 12px; font-weight: 700; color: var(--text-dark-muted);">FULL NAME</label>
+                      <input type="text" id="prof-name" class="filter-pill-canvas" style="width: 100%; margin-top: 6px; border-radius: var(--radius-md);" required>
+                    </div>
+                    <div style="margin-bottom: 14px;">
+                      <label style="font-size: 12px; font-weight: 700; color: var(--text-dark-muted);">SKILL LEVEL</label>
+                      <select id="prof-skill" class="filter-pill-canvas" style="width: 100%; margin-top: 6px; border-radius: var(--radius-md);" required>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                      </select>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                      <label style="font-size: 12px; font-weight: 700; color: var(--text-dark-muted);">PRIMARY CITY</label>
+                      <input type="text" id="prof-city" class="filter-pill-canvas" style="width: 100%; margin-top: 6px; border-radius: var(--radius-md);" required>
+                    </div>
+                    <button type="submit" class="btn-coral-journey" style="width: 100%;">Save Changes</button>
+                  </form>
+                </div>
+
+                <div class="bento-stat-card">
+                  <div class="stat-subtext">Player Karma Standing</div>
+                  <div class="stat-big-number" id="prof-karma-big">⚡ 5.0</div>
+                  <div style="font-size: 13px; font-weight: 700; color: var(--primary-lime); margin-top: 6px;">[ Exceptional Sportsmanship ]</div>
+                  <div style="font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 10px; max-width: 280px;">Rated by match hosts and peer athletes after completed games.</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </main>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- FLOATING / DRAWER LIVE GAME CHAT           -->
+      <!-- ========================================== -->
+      <div id="chat-drawer" style="position: fixed; bottom: 24px; right: 24px; width: 360px; height: 500px; background: #141C12; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-xl); box-shadow: 0 20px 50px rgba(0,0,0,0.6); z-index: 80; display: none; flex-direction: column; overflow: hidden;">
+        <div style="padding: 16px; background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="tennis-ball-icon" style="width: 14px; height: 14px;"></div>
+            <div>
+              <div style="font-weight: 800; font-size: 14px; color: #FFF;" id="chat-game-title">Lobby Chat</div>
+              <div style="font-size: 11px; color: var(--primary-lime);">● Live WebSocket</div>
+            </div>
+          </div>
+          <button type="button" class="topbar-round-btn" style="width: 30px; height: 30px;" onclick="closeChatDrawer()">&times;</button>
+        </div>
+
+        <div id="chat-messages-box" style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px;"></div>
+
+        <form id="chat-send-form" style="padding: 12px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 8px;">
+          <input type="text" id="chat-input-field" class="filter-pill-canvas" style="flex: 1; background: #0A0E0A; color: #FFF; border-radius: var(--radius-full); padding: 8px 16px;" placeholder="Message team..." autocomplete="off" required>
+          <button type="submit" class="btn-lime-dev" style="padding: 8px 16px; font-size: 12px;">Send</button>
         </form>
       </div>
-    </div>
 
-    <!-- ========================================== -->
-    <!-- DIALOG MODAL 3: CREATE TEAM -->
-    <!-- ========================================== -->
-    <div id="modal-create-team" class="modal-overlay">
-      <div class="modal-content glass-panel">
-        <div class="modal-header">
-          <h2 style="color: var(--accent);">Create Team Club</h2>
-          <button class="modal-close" onclick="toggleModal('modal-create-team', false)">&times;</button>
+      <!-- ========================================== -->
+      <!-- MODALS: HOST GAME, BOOK TURF, RATE GAME    -->
+      <!-- ========================================== -->
+      <div id="modal-create-game" class="auth-popup-card" style="max-width: 480px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
+          <h2 style="font-size: 20px; font-weight: 800; color: #FFF;">Host a Match Lobby</h2>
+          <button type="button" class="topbar-round-btn" onclick="closeModal('modal-create-game')">&times;</button>
+        </div>
+        <form id="create-game-form">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Sport</label>
+              <select id="game-sport" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;">
+                <option value="Football">⚽ Football</option>
+                <option value="Cricket">🏏 Cricket</option>
+                <option value="Badminton">🏸 Badminton</option>
+                <option value="Basketball">🏀 Basketball</option>
+                <option value="Tennis">🎾 Tennis</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">City</label>
+              <select id="game-city" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" onchange="handleModalCityChange(this.value)">
+                <option value="Bangalore">Bangalore</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Pune">Pune</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Chennai">Chennai</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Venue Arena (Optional)</label>
+            <select id="game-venue-id" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;">
+              <option value="">No Arena / Street pickup</option>
+            </select>
+          </div>
+
+          <!-- Schedule Card (Date Blocks & Slot Blocks) -->
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 14px; margin-bottom: 12px;">
+            <div style="margin-bottom: 12px;">
+              <label style="font-size: 10px; font-weight: 800; color: #94A3B8; text-transform: uppercase; margin-bottom: 6px; display: block;">Select Match Date</label>
+              <div class="date-blocks-carousel" id="game-date-carousel"></div>
+              <input type="hidden" id="game-date" required>
+            </div>
+            <div>
+              <label style="font-size: 10px; font-weight: 800; color: #94A3B8; text-transform: uppercase; margin-bottom: 6px; display: block;">Available Match Slots</label>
+              <div class="slots-block-grid" id="game-slot-grid"></div>
+              <input type="hidden" id="game-start-time" value="16:00">
+              <input type="hidden" id="game-end-time" value="17:00">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Skill Level</label>
+              <select id="game-skill-level" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;">
+                <option value="All Levels">All Levels (Open Pickup)</option>
+                <option value="Beginner">Beginner Only</option>
+                <option value="Intermediate" selected>Intermediate</option>
+                <option value="Advanced">Advanced (Competitive)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Max Players</label>
+              <input type="number" id="game-max-players" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" value="4" min="2" max="30" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-coral-journey" style="width: 100%;">Launch Match Lobby</button>
+        </form>
+      </div>
+
+      <!-- Book Turf Modal -->
+      <div id="modal-book-venue" class="auth-popup-card" style="max-width: 500px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
+          <div>
+            <h2 style="font-size: 20px; font-weight: 800; color: #FFF;" id="book-venue-name">Book Court</h2>
+            <div style="font-size: 12px; color: var(--primary-lime);" id="book-venue-rate">₹1,500 / hr</div>
+          </div>
+          <button type="button" class="topbar-round-btn" onclick="closeModal('modal-book-venue')">&times;</button>
+        </div>
+        <form id="book-venue-form">
+          <input type="hidden" id="book-venue-id">
+
+          <!-- Date Blocks Strip -->
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 10px; font-weight: 800; color: #94A3B8; text-transform: uppercase; margin-bottom: 6px; display: block;">Select Date</label>
+            <div class="date-blocks-carousel" id="book-date-carousel"></div>
+            <input type="hidden" id="book-date" required>
+          </div>
+
+          <!-- Available Slots Blocks -->
+          <div style="margin-bottom: 14px;">
+            <label style="font-size: 10px; font-weight: 800; color: #94A3B8; text-transform: uppercase; margin-bottom: 6px; display: block;">Available Slots</label>
+            <div class="slots-block-grid" id="book-slot-grid"></div>
+            <input type="hidden" id="book-start-time" value="16:00">
+            <input type="hidden" id="book-end-time" value="17:00">
+          </div>
+
+          <!-- Bottom Booking Summary Card (Playspots format) -->
+          <div class="booking-summary-bar">
+            <div class="booking-summary-header" id="book-summary-date-header">Wed, 02 September 2026</div>
+            <div class="booking-time-split">
+              <div class="time-col">
+                <div class="time-label">From</div>
+                <div class="time-val" id="book-summary-from">04:00 PM</div>
+              </div>
+              <div class="time-col">
+                <div class="time-label">To</div>
+                <div class="time-val" id="book-summary-to">05:00 PM</div>
+              </div>
+            </div>
+            <div class="booking-bottom-action-row">
+              <div class="booking-price-tag">
+                <div class="price-label">Slot Price</div>
+                <div class="price-val" id="book-total-amount">₹1,500</div>
+              </div>
+              <button type="submit" class="btn-book-confirm">Book Now</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Register Arena Modal -->
+      <div id="modal-create-venue" class="auth-popup-card" style="max-width: 480px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
+          <h2 style="font-size: 20px; font-weight: 800; color: #FFF;">Register Arena</h2>
+          <button type="button" class="topbar-round-btn" onclick="closeModal('modal-create-venue')">&times;</button>
+        </div>
+        <form id="create-venue-form">
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Arena Name</label>
+            <input type="text" id="venue-name" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" placeholder="Novex Padel Arena" required>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Address</label>
+            <input type="text" id="venue-address" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" placeholder="Andheri West" required>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">City</label>
+            <input type="text" id="venue-city" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" value="Mumbai" required>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Sports (comma-separated)</label>
+            <input type="text" id="venue-sports" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" value="Tennis, Padel, Football" required>
+          </div>
+          <div style="margin-bottom: 18px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Hourly Rate (₹)</label>
+            <input type="number" id="venue-rate" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" value="1500" required>
+          </div>
+          <button type="submit" class="btn-coral-journey" style="width: 100%;">Register Venue</button>
+        </form>
+      </div>
+
+      <!-- Create Team Modal -->
+      <div id="modal-create-team" class="auth-popup-card" style="max-width: 480px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
+          <h2 style="font-size: 20px; font-weight: 800; color: #FFF;">Create Sports Club</h2>
+          <button type="button" class="topbar-round-btn" onclick="closeModal('modal-create-team')">&times;</button>
         </div>
         <form id="create-team-form">
-          <div class="form-group">
-            <label class="form-label">Team Name</label>
-            <input type="text" id="team-name" class="form-input" placeholder="Mumbai Strikers" required>
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Team Name</label>
+            <input type="text" id="team-name" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" placeholder="Mumbai Strikers Club" required>
           </div>
-          <div class="form-group">
-            <label class="form-label">Description</label>
-            <input type="text" id="team-desc" class="form-input" placeholder="Weekly amateur football club. All levels welcome.">
+          <div style="margin-bottom: 18px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Description</label>
+            <input type="text" id="team-desc" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" placeholder="Weekly pro tournament & pickup club.">
           </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Register Team</button>
+          <button type="submit" class="btn-coral-journey" style="width: 100%;">Register Team Club</button>
         </form>
       </div>
+
+      <!-- Rate Match Karma Modal -->
+      <div id="modal-rate-game" class="auth-popup-card" style="max-width: 480px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
+          <h2 style="font-size: 20px; font-weight: 800; color: #FFF;">Rate Sportsmanship</h2>
+          <button type="button" class="topbar-round-btn" onclick="closeModal('modal-rate-game')">&times;</button>
+        </div>
+        <form id="rate-game-form">
+          <input type="hidden" id="rate-game-id">
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Player</label>
+            <select id="rate-player-select" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" required></select>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Sportsmanship Score</label>
+            <select id="rate-score-select" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" required>
+              <option value="5">⭐⭐⭐⭐⭐ (5/5) Exceptional Fair Play</option>
+              <option value="4">⭐⭐⭐⭐ (4/5) Great Teammate</option>
+              <option value="3">⭐⭐⭐ (3/5) Fair Game</option>
+            </select>
+          </div>
+          <div style="margin-bottom: 18px;">
+            <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Comment</label>
+            <input type="text" id="rate-comment-input" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" placeholder="Great agility and fair player!">
+          </div>
+          <button type="submit" class="btn-coral-journey" style="width: 100%;">Submit Karma Score</button>
+        </form>
+      </div>
+
+      <!-- Toast Holder -->
+      <div class="toast-container" id="toast-holder"></div>
+
     </div>
 
-    <!-- Toast Notifications Container -->
-    <div class="toast-container" id="toast-holder"></div>
-
-    <!-- Core App Logic Script -->
-    <script type="module" src="/app.js"></script>
+    <script type="module" src="/app.js?t=1788339500"></script>
   </body>
 </html>

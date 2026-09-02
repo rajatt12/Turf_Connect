@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
-    PROJECT_NAME: str = "Turf"
+    PROJECT_NAME: str = "SquadUp"
     DATABASE_URL: str
     REDIS_URL: str
     SECRET_KEY: str

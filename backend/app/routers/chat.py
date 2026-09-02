@@ -60,9 +60,17 @@ async def websocket_endpoint(
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
         return
         
-    # 3. Verify the target game exists
-    game = await db.get(Game, game_id)
+    # 3. Verify the target game exists and user is a joined player
+    stmt = select(Game).where(Game.id == game_id).options(selectinload(Game.players))
+    res = await db.execute(stmt)
+    game = res.scalar_one_or_none()
     if not game:
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        return
+
+    # Enforce chat security: User must be in game.players (or be an admin)
+    is_member = any(p.id == user.id for p in game.players)
+    if not is_member and user.role != "admin":
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
         return
 
@@ -97,7 +105,7 @@ async def websocket_endpoint(
             data = await websocket.receive_text()
             try:
                 payload = json.loads(data)
-                body = payload.get("body")
+                body = payload.get("body") or payload.get("message")
             except Exception:
                 continue  # Ignore invalid JSON
                 

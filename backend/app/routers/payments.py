@@ -49,21 +49,30 @@ async def pay_booking(
     duration_hours = (booking.ends_at - booking.starts_at).total_seconds() / 3600.0
     amount = booking.venue.hourly_rate * duration_hours
     
-    # 3. Create order in Razorpay
-    try:
-        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-        order_data = {
-            "amount": int(amount * 100),  # Amount in paise
+    # 3. Create order in Razorpay (or simulated test order if in dev test mode)
+    if settings.RAZORPAY_KEY_ID.startswith("dummy") or not settings.RAZORPAY_KEY_SECRET:
+        order = {
+            "id": f"order_test_{uuid.uuid4().hex[:12]}",
+            "amount": int(amount * 100),
             "currency": "INR",
             "receipt": f"receipt_{booking.id}",
-            "payment_capture": 1
+            "status": "created"
         }
-        order = client.order.create(data=order_data)
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to create order with gateway: {str(e)}"
-        )
+    else:
+        try:
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+            order_data = {
+                "amount": int(amount * 100),  # Amount in paise
+                "currency": "INR",
+                "receipt": f"receipt_{booking.id}",
+                "payment_capture": 1
+            }
+            order = client.order.create(data=order_data)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to create order with gateway: {str(e)}"
+            )
         
     # 4. Save Payment record in database
     db_payment = Payment(
@@ -89,28 +98,29 @@ async def razorpay_webhook(
 ):
     # 1. Fetch headers and request body
     signature = request.headers.get("X-Razorpay-Signature")
-    if not signature:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Webhook signature missing"
-        )
-        
     body_bytes = await request.body()
     body_str = body_bytes.decode("utf-8")
     
-    # 2. Verify Razorpay webhook signature
-    try:
-        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
-        client.utility.verify_webhook_signature(
-            body_str,
-            signature,
-            settings.RAZORPAY_WEBHOOK_SECRET
-        )
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid webhook signature"
-        )
+    # 2. Verify Razorpay webhook signature (if not in test mode with dummy secrets)
+    is_dummy_mode = settings.RAZORPAY_WEBHOOK_SECRET.startswith("dummy")
+    if not is_dummy_mode:
+        if not signature:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Webhook signature missing"
+            )
+        try:
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+            client.utility.verify_webhook_signature(
+                body_str,
+                signature,
+                settings.RAZORPAY_WEBHOOK_SECRET
+            )
+        except Exception:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid webhook signature"
+            )
         
     # 3. Parse webhook payload
     try:

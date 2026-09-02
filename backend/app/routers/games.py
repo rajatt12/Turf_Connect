@@ -52,6 +52,8 @@ async def create_game(
         sport=game_in.sport,
         city=game_in.city,
         max_players=game_in.max_players,
+        starts_at=game_in.starts_at,
+        skill_level=game_in.skill_level or "All Levels",
         venue_id=game_in.venue_id,
         team_id=game_in.team_id,
         status="open",
@@ -92,7 +94,10 @@ async def list_games(
     if sport:
         statement = statement.where(Game.sport == sport)
     if city:
-        statement = statement.where(Game.city == city)
+        if city in ["Bangalore", "Bengaluru"]:
+            statement = statement.where(Game.city.in_(["Bangalore", "Bengaluru"]))
+        else:
+            statement = statement.where(Game.city == city)
     if status:
         statement = statement.where(Game.status == status)
     if team_id:
@@ -187,3 +192,76 @@ async def join_game(
         )
         
     return game
+
+
+@router.post("/{id}/leave", response_model=GameRead)
+async def leave_game(
+    id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(current_active_user)
+):
+    statement = select(Game).where(Game.id == id).options(selectinload(Game.players))
+    result = await db.execute(statement)
+    game = result.scalar_one_or_none()
+    
+    if not game:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Game not found")
+        
+    if game.host_id == current_user.id:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Host cannot leave their own match lobby. Use cancel/delete instead.")
+        
+    if not any(p.id == current_user.id for p in game.players):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="You have not joined this game.")
+        
+    game.players = [p for p in game.players if p.id != current_user.id]
+    if len(game.players) < game.max_players and game.status == "full":
+        game.status = "open"
+        
+    db.add(game)
+    await db.commit()
+    await db.refresh(game)
+    
+    # Notify host that player left
+    from app.core.queue import enqueue_task
+    await enqueue_task(
+        "send_notification",
+        str(game.host_id),
+        "Player Left Roster",
+        f"{current_user.name} has left your match lobby for {game.sport}.",
+        "leave"
+    )
+    
+    return game
+
+
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def cancel_game(
+    id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(current_active_user)
+):
+    statement = select(Game).where(Game.id == id).options(selectinload(Game.players))
+    result = await db.execute(statement)
+    game = result.scalar_one_or_none()
+    
+    if not game:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Game not found")
+        
+    if game.host_id != current_user.id and current_user.role != "admin":
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only the host or admin can cancel this match.")
+        
+    # Notify all joined players that game was cancelled
+    from app.core.queue import enqueue_task
+    for player in game.players:
+        if player.id != current_user.id:
+            await enqueue_task(
+                "send_notification",
+                str(player.id),
+                "Match Lobby Cancelled",
+                f"The {game.sport} match hosted by {current_user.name} was cancelled.",
+                "cancelled"
+            )
+            
+    await db.delete(game)
+    await db.commit()
+    return None

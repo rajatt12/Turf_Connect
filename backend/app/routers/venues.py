@@ -18,6 +18,12 @@ async def create_venue(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(current_active_user)
 ):
+    if current_user.role not in ["admin", "venue_owner"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only verified turf arena owners or platform admins can register new venues."
+        )
+        
     db_venue = Venue.model_validate(venue_in)
     db_venue.location = f"POINT({venue_in.lng} {venue_in.lat})"
     db.add(db_venue)
@@ -36,7 +42,10 @@ async def list_venues(
     statement = select(Venue)
     
     if city:
-        statement = statement.where(Venue.city == city)
+        if city in ["Bangalore", "Bengaluru"]:
+            statement = statement.where(Venue.city.in_(["Bangalore", "Bengaluru"]))
+        else:
+            statement = statement.where(Venue.city == city)
     if sport:
         statement = statement.where(sport == any_(Venue.sports))
         

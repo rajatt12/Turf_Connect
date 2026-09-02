@@ -85,6 +85,8 @@ class Game(SQLModel, table=True):
     city: str = Field(nullable=False)
     status: str = Field(default="open", nullable=False) # e.g. "open", "full"
     max_players: int = Field(nullable=False)
+    starts_at: Optional[datetime.datetime] = Field(default=None, nullable=True)
+    skill_level: Optional[str] = Field(default="All Levels", nullable=True)
 
     team_id: Optional[uuid.UUID] = Field(default=None, foreign_key="team.id", nullable=True)
 
@@ -284,6 +286,8 @@ class GameCreate(SQLModel):
     sport: str
     city: str
     max_players: int
+    starts_at: Optional[datetime.datetime] = None
+    skill_level: Optional[str] = "All Levels"
     venue_id: Optional[uuid.UUID] = None
     team_id: Optional[uuid.UUID] = None
 
@@ -294,7 +298,10 @@ class GameRead(GameCreate):
     status: str
     slots_filled: int
     slots_open: int
+    starts_at: Optional[datetime.datetime] = None
+    skill_level: Optional[str] = "All Levels"
     team_id: Optional[uuid.UUID] = None
+    players: list["UserRead"] = []
 
 
 # ==========================================

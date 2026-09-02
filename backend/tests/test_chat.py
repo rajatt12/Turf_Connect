@@ -72,12 +72,16 @@ def test_chat_broadcast_multiple_clients(db_session):
         token2 = get_user_token(tc, "chat2_2@example.com", "pass123")
         
         headers1 = {"Authorization": f"Bearer {token1}"}
+        headers2 = {"Authorization": f"Bearer {token2}"}
         game_res = tc.post("/games", json={
             "sport": "Football",
             "city": "Mumbai",
             "max_players": 10
         }, headers=headers1)
         game_id = game_res.json()["id"]
+        
+        # User 2 joins the game
+        tc.post(f"/games/{game_id}/join", headers=headers2)
         
         # Override get_db to return fresh sessions from global engine
         local_session_maker = sessionmaker(

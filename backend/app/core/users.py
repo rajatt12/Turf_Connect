@@ -45,7 +45,8 @@ async def get_user_manager(user_db=Depends(get_user_db)):
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
 def get_jwt_strategy() -> JWTStrategy:
-    return JWTStrategy(secret=settings.SECRET_KEY, lifetime_seconds=3600)
+    # 30-day token lifetime so sessions stay active seamlessly
+    return JWTStrategy(secret=settings.SECRET_KEY, lifetime_seconds=86400 * 30)
 
 auth_backend = AuthenticationBackend(
     name="jwt",

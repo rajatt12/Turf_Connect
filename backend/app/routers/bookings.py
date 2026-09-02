@@ -16,11 +16,23 @@ async def create_booking(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(current_active_user)
 ):
-    # 1. Validate booking dates order
+    # 1. Validate booking dates order & duration
     if booking_in.starts_at >= booking_in.ends_at:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="starts_at must be before ends_at"
+        )
+        
+    duration_minutes = (booking_in.ends_at - booking_in.starts_at).total_seconds() / 60.0
+    if duration_minutes < 30:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Minimum booking duration is 30 minutes"
+        )
+    if duration_minutes > 360:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Maximum booking duration is 6 hours per single reservation"
         )
         
     # 2. Lock the parent Venue row using pessimistic locking (SELECT ... FOR UPDATE)
