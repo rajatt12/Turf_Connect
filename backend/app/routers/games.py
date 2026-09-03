@@ -104,17 +104,10 @@ async def list_games(
         statement = statement.where(Game.team_id == team_id)
         
     if lat is not None and lng is not None and radius_km is not None:
-        from sqlalchemy import func
-        from geoalchemy2 import Geography
-        
-        ref_point = func.ST_SetSRID(func.ST_MakePoint(lng, lat), 4326)
-        
-        statement = statement.join(Venue)
-        statement = statement.where(
-            func.ST_DWithin(Venue.location, func.cast(ref_point, Geography), radius_km * 1000)
-        )
-        statement = statement.order_by(
-            func.ST_Distance(Venue.location, func.cast(ref_point, Geography))
+        deg_radius = radius_km / 111.0
+        statement = statement.join(Venue).where(
+            Venue.lat.between(lat - deg_radius, lat + deg_radius),
+            Venue.lng.between(lng - deg_radius, lng + deg_radius)
         )
         
     statement = statement.offset(offset).limit(limit)

@@ -60,13 +60,7 @@ class Venue(SQLModel, table=True):
     closing_time: datetime.time = Field(nullable=False)
     lat: float = Field(nullable=False)
     lng: float = Field(nullable=False)
-    location: Optional[Any] = Field(
-        default=None,
-        sa_column=Column(
-            Geography(geometry_type="POINT", srid=4326, spatial_index=True),
-            nullable=True
-        )
-    )
+    location: Optional[str] = Field(default=None, nullable=True)
 
     # Relationships
     games: list["Game"] = Relationship(back_populates="venue")
