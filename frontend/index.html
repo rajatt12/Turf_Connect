@@ -88,7 +88,7 @@
               <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">Password</label>
               <input type="password" id="login-password" class="filter-pill-canvas" style="width: 100%; margin-top: 6px; border-radius: var(--radius-md); background: #0B100B; color: #FFF; border-color: rgba(255,255,255,0.15);" value="devpassword123" required>
             </div>
-            <button type="submit" class="btn-coral-journey" style="width: 100%;">Log In to Dashboard</button>
+            <button type="submit" class="btn-coral-journey" style="width: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">Log In to Dashboard</button>
           </form>
 
           <!-- Register Form (Hidden by default) -->
@@ -115,9 +115,16 @@
             </div>
             <div style="margin-bottom: 16px;">
               <label style="font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase;">City</label>
-              <input type="text" id="register-city" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;" value="Mumbai" required>
+              <select id="register-city" class="filter-pill-canvas" style="width: 100%; margin-top: 4px; border-radius: var(--radius-md); background: #0B100B; color: #FFF;">
+                <option value="Mumbai" selected>Mumbai</option>
+                <option value="Bangalore">Bangalore</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Pune">Pune</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Chennai">Chennai</option>
+              </select>
             </div>
-            <button type="submit" class="btn-coral-journey" style="width: 100%;">Create Account</button>
+            <button type="submit" class="btn-coral-journey" style="width: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">Create Account</button>
           </form>
 
           <div style="text-align: center; margin-top: 18px; font-size: 13px; color: #94A3B8;">
