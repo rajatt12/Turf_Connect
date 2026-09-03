@@ -886,6 +886,181 @@ button, input, select, textarea {
 }
 
 /* ==================================================================== */
+/* 11. Mobile Phone Viewport Optimizations (iOS / Android Screen Fits)  */
+/* ==================================================================== */
+@media (max-width: 768px) {
+  /* Hero & Landing */
+  .hero-landing-wrapper {
+    padding: 24px 18px 40px;
+    justify-content: flex-start;
+    gap: 28px;
+  }
+  .hero-header {
+    width: 100%;
+  }
+  .hero-massive-title {
+    font-size: 38px;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+  .hero-subtitle {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+  .hero-body-content {
+    margin: 10px 0 0 0;
+  }
+  .hero-cta-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .hero-cta-group button {
+    width: 100%;
+    justify-content: center;
+  }
+  .hero-proof-card {
+    position: static;
+    margin-top: 20px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Main In-App Layout & Mobile Bottom Navigation Bar */
+  .match-app-layout {
+    flex-direction: column;
+    padding: 10px 10px 84px 10px;
+    gap: 12px;
+  }
+
+  .match-sidebar {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: var(--radius-lg);
+    background: var(--bg-sidebar);
+  }
+  .match-sidebar .sidebar-pro-card,
+  .match-sidebar #logout-btn {
+    display: none;
+  }
+  .match-brand-logo {
+    padding: 0 0 10px 0;
+    border-bottom: none;
+  }
+
+  /* Fixed Mobile Bottom Nav Bar (Native App Style) */
+  .match-nav-list {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #0A0F0B;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 8px 4px;
+    margin: 0;
+    z-index: 95;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+  }
+  .match-nav-item {
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 8px;
+    font-size: 9px;
+    border-radius: var(--radius-sm);
+    border-left: none !important;
+  }
+  .match-nav-item svg {
+    width: 18px;
+    height: 18px;
+  }
+  .match-nav-item.active {
+    background: rgba(210, 238, 56, 0.15);
+    color: var(--primary-lime);
+  }
+
+  /* Main Bento Canvas on Mobile */
+  .match-main-canvas {
+    padding: 18px 14px;
+    border-radius: var(--radius-lg);
+  }
+  .match-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .match-greeting-title {
+    font-size: 24px;
+  }
+  .match-topbar-pills {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Bento Grid Stack */
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .bento-athlete-card {
+    min-height: 280px;
+    grid-row: auto;
+  }
+  .bento-next-match {
+    grid-column: span 1;
+    padding: 18px;
+  }
+  .match-versus-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .vs-badge-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 11px;
+  }
+  .vs-fighter-card {
+    width: 100%;
+    height: 90px;
+  }
+  .bento-bottom-row {
+    grid-template-columns: 1fr;
+    grid-column: span 1;
+    gap: 10px;
+  }
+
+  /* Social & Profile Grids */
+  #view-social > div,
+  #view-profile > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Chat Drawer Mobile Bottom Sheet */
+  #chat-drawer {
+    width: 100% !important;
+    height: 80vh !important;
+    bottom: 0 !important;
+    right: 0 !important;
+    border-radius: 24px 24px 0 0 !important;
+    z-index: 100 !important;
+  }
+
+  /* Popup Card Fits */
+  .auth-popup-card {
+    width: 95%;
+    padding: 20px 16px;
+    max-height: 85vh;
+  }
+}
+
+/* ==================================================================== */
 /* Date Blocks Carousel & Available Slot Blocks (Playo / Playspots Style)*/
 /* ==================================================================== */
 .date-blocks-carousel {
